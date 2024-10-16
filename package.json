@@ -1,0 +1,58 @@
+{
+  "name": "devlog",
+  "displayName": "devlog",
+  "description": "devlog",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.94.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "devlog.helloWorld",
+        "title": "Hello World"
+      },
+      {
+        "command": "devlog.start",
+        "title": "Start Session"
+      },
+      {
+        "command": "devlog.stop",
+        "title": "Stop Session"
+      },
+      {
+        "command": "devlog.test",
+        "title": "Test Session"
+      },
+      {
+        "command": "devlog.authenticate",
+        "title": "Authenticate User"
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.8",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.94.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.11.1"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ShivamPande18/DevsLOG-Strava-For-Coding.git"
+  }
+}
