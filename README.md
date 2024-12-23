@@ -43,9 +43,11 @@ Alternatively, you can install DevsLOG from the [Visual Studio Marketplace](#lin
 
 ## Usage
 
-1. After installation, press `Ctrl+Shift+P` and search for **`Start Session`** to start a coding session.
-2. DevsLOG will start tracking your session.
-3. At the end of your session, press `Ctrl+Shift+P` and search for **`Stop Session`**. A new window will show your session analysis.
+1. After installation, press `Ctrl+Shift+P` and search for **`Authenticate User`** to open the web version. Sign In to get a token and paste it in the extention to authenticate and sync.
+2. After authentication, press `Ctrl+Shift+P` and search for **`Start Session`** to start a coding session.
+3. DevsLOG will start tracking your session.
+4. At the end of your session, press `Ctrl+Shift+P` and search for **`Stop Session`**. A new window will show your session analysis.
+5. Find your last 30 days progress in the web dash board [here](https://devlogs-dev.netlify.app/register).
 
 ## Commands
 
@@ -60,7 +62,19 @@ This extension is in its first version, and we have plenty of exciting updates p
 - **Third-Party Integrations**: Sync with GitHub, GitLab, and other developer platforms for seamless collaboration.
 - **Website and Mobile App**: Access your coding insights on the go from any device and any platform.
 
-## v1 (latest)
+## v2 (latest)
+
+- **Track Coding Sessions**: Automatically or manually start and stop tracking your coding sessions in VS Code.
+- **Web Dashboard**: Find your last 30 days progress in the web dash board [here](https://devlogs-dev.netlify.app/register).
+- **Session Time**: Get the total duration of each coding session from start to finish.
+- **Word and Line Count**: View the number of words and lines coded during the session.
+- **Files Worked On**: See the total number of files you interacted with during the session.
+- **Languages Used**: Track the number of different programming languages you worked with during a session, and get them arranged from most contributions to least.
+- **Parentheses, Backspaces, and Semicolons**: DevsLOG tracks specific key usages like parentheses `()`, backspaces, and semicolons `;` to provide detailed insights into your coding patterns.
+
+  
+
+## v1 
 
 As the initial release, **v1** of DevsLOG comes with core features designed to give you detailed insights into your coding sessions. The features included in this version are:
 
@@ -70,5 +84,3 @@ As the initial release, **v1** of DevsLOG comes with core features designed to g
 - **Files Worked On**: See the total number of files you interacted with during the session.
 - **Languages Used**: Track the number of different programming languages you worked with during a session, and get them arranged from most contributions to least.
 - **Parentheses, Backspaces, and Semicolons**: DevsLOG tracks specific key usages like parentheses `()`, backspaces, and semicolons `;` to provide detailed insights into your coding patterns.
-
-This first version is aimed at providing the basics to help you understand your development habits, with many more features planned for future updates.
