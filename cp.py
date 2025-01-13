@@ -1,7 +1,11 @@
 from win32gui import GetWindowText, GetForegroundWindow
 import keyboard
+import os
+import sys
 
-f = open("C:/Drive/DevLog/devlog/log.csv",'w',encoding='utf-8')
+path = sys.argv[1]
+
+f = open(f"{path}",'w',encoding='utf-8')
 f.close()
 
 def my_callback(event):
@@ -109,8 +113,12 @@ def my_callback(event):
     # if(event_type == "down"):   
         if(name == '{'): name = "lparan"
         elif(name == '}'): name = "rparan"
+        elif(name == ';'): name = "eol"
+        elif(name == ','): name = "comma"
+        elif(name == '"'): name = "dquote"
+        elif(name == "'"): name = "squote"
         log=name + "," + event_type +","+ window+","+lang
-        with open("C:/Drive/DevLog/devlog/log.csv",'a',encoding='utf-8') as file:
+        with open(f"{path}",'a',encoding='utf-8') as file:
             file.write('\n'+log)
 
 keyboard.hook(callback=my_callback)

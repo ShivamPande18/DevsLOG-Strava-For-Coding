@@ -1,0 +1,164 @@
+:root {
+    --bgColor: #1C1B1F;
+    --fgColor: #2C2C2E;
+    --doneBlock: #FF6500;
+    --grey: #777777;
+    --curdayBlock: #FFC800;
+    --textColor: #FFFFFF;
+    --secondaryText: #AFAFAF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+body {
+    background-color: var(--bgColor);
+}
+
+.cardCont {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.card {
+    height: 80%;
+    width: auto;
+    aspect-ratio: 3 / 4;
+    background-color: var(--fgColor);
+    color: var(--textColor);
+    border-radius: 16px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 8px 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.cardBlock {
+    padding-inline: 10px;
+}
+
+.cardBlock h1 {
+    font-size: 2rem;
+    color: var(--textColor);
+}
+
+.cardBlock h2 {
+    font-size: 1.5rem;
+    color: var(--secondaryText);
+    font-weight: 100;
+}
+
+.title {
+    padding-inline: 20px;
+    flex: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+}
+
+.stats {
+    flex: 6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.statCont {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
+    row-gap: 30px;
+}
+
+li {
+    list-style: none;
+}
+
+.graph {
+    flex: 7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+.graph p {
+    font-size: 1.5rem;
+    color: var(--secondaryText);
+    font-style: italic;
+    margin-top: 10px;
+    justify-self: self-start;
+}
+
+.datepicker {
+    width: 80%;
+    background-color: var(--fgColor);
+    border-radius: 16px;
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, .2), 0 5px 10px 0 rgba(0, 0, 0, .1);
+    padding: 1rem;
+}
+
+.datepicker-calendar {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-row-gap: 1rem;
+}
+
+.day,
+.date {
+    justify-self: center;
+}
+
+.day {
+    color: var(--secondaryText);
+    font-size: .875em;
+    font-weight: 500;
+    justify-self: center;
+}
+
+.date {
+    padding: 0;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-weight: 600;
+    border: 2px solid transparent;
+    background-color: transparent;
+    cursor: default;
+    border: var(--grey) solid;
+    color: var(--textColor);
+}
+
+.prev-yes {
+    background-color: var(--doneBlock);
+    color: var(--textColor);
+    border: none;
+}
+
+.prev-no {
+    background-color: var(--grey);
+}
+
+.faded {
+    color: var(--secondaryText);
+}
+
+.current-day {
+    color: var(--bgColor);
+    border: none;
+    background-color: var(--curdayBlock);
+}

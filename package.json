@@ -1,15 +1,19 @@
 {
-  "name": "devlog",
-  "displayName": "devlog",
-  "description": "devlog",
-  "version": "0.0.1",
+  "icon": "./icon.png",
+  "name": "devlogs",
+  "displayName": "Devlogs: Strava For Devs",
+  "description": "Track, analyze, and share your coding sessions with the most productive coding community",
+  "version": "0.0.4",
+  "publisher": "ShivamPande18",
   "engines": {
     "vscode": "^1.94.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "*"
+  ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
@@ -32,8 +36,30 @@
       {
         "command": "devlog.authenticate",
         "title": "Authenticate User"
+      },
+      {
+        "command": "devlog.openWebview",
+        "title": "Open Devlogs Webview"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "devlogsContainer",
+          "title": "Devlogs",
+          "icon": "./actIcon.svg"
+        }
+      ]
+    },
+    "views": {
+      "devlogsContainer": [
+        {
+          "id": "devlogsView",
+          "name": "Dashboard",
+          "when": "true"
+        }
+      ]
+    }
   },
   "scripts": {
     "lint": "eslint .",
@@ -49,7 +75,8 @@
     "eslint": "^9.11.1"
   },
   "dependencies": {
-    "csv-parse": "^5.5.6"
+    "csv-parse": "^5.5.6",
+    "firebase": "^11.0.0"
   },
   "repository": {
     "type": "git",

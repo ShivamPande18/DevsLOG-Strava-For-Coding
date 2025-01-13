@@ -1,0 +1,85 @@
+:root {
+    --bgColor: #1C1B1F;
+    --bg2Color: #2C2C2E;
+    --btnColor: #FF6500;
+    --fgColor: #FDFDFD;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+body {
+    background-color: var(--bgColor);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.black-container {
+    background-color: transparent;
+    /* padding: 2rem; */
+    /* border-radius: 15px; */
+    /* box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 15px; */
+    width: 600px;
+    height: 80vh;
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+h1 {
+    color: var(--fgColor);
+    margin-bottom: 2rem;
+    font-size: 4rem;
+    width: 100%;
+}
+
+.input-group {
+    margin: 2rem 0;
+    width: 100%;
+}
+
+input {
+    padding: 0.8rem 1rem;
+    width: 100%;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    background-color: var(--fgColor);
+    color: var(--bgColor);
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--c-theme-primary);
+}
+
+button {
+    padding: 0.8rem 2rem;
+    width: 100%;
+    background-color: var(--btnColor);
+    color: var(--fgColor);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 2rem;
+    font-weight: bold;
+    transition: opacity 0.2s;
+}
+
+button:hover {
+    opacity: 0.9;
+}
