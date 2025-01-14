@@ -89,13 +89,6 @@ class Devlogs {
     }
 
     authCommand() {
-
-        // var userPath = vscode.Uri.file(
-        //     path.join(this.extentionPath + "user.txt")
-        // );
-
-        var userPath = this.extentionPath + "user.txt"
-
         const cssFilePath = vscode.Uri.file(
             path.join(this.extentionPath, 'web', 'auth.css')
         );
@@ -103,7 +96,7 @@ class Devlogs {
         // Convert the file path to a URI for the webview
         const cssFileUri = this.panel.webview.asWebviewUri(cssFilePath);
 
-        onAuth(this.panel, cssFileUri, userPath)
+        onAuth(this.panel, cssFileUri, this.FILE_USER)
         console.log("Auth cmd")
 
         this.panel.webview.onDidReceiveMessage(
@@ -111,7 +104,7 @@ class Devlogs {
                 if (message.command == "onAuth") {
 
                     let curToken = (message.text)
-                    checkUser(this.panel, userPath, curToken)
+                    checkUser(this.panel, this.FILE_USER, curToken)
                 }
             },
             undefined,
