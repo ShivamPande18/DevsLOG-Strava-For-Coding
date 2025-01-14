@@ -1,6 +1,6 @@
 const { parse } = require("csv-parse");
-const { getStatHtml } = require('../statHtml');
-const { getLast30Days, msToHours } = require('../helper');
+const { getStatHtml } = require('../files/statHtml');
+const { getLast30Days, msToHours } = require('./helper');
 
 const fs = require('fs');
 const path = require('path');

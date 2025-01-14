@@ -1,8 +1,8 @@
 const fs = require('fs');
 const vscode = require('vscode');
 const { fdb, db } = require("./firebaseConfig")
-const { getAuthHtml } = require('../authHtml');
-const { calculateTotalDays } = require('../helper');
+const { getAuthHtml } = require('../web/authHtml');
+const { calculateTotalDays } = require('./helper');
 
 function display(msg) {
     vscode.window.showInformationMessage(msg)
