@@ -1,37 +1,13 @@
-const { Devlogs } = require('./src/devlogs');
+const { parse } = require("csv-parse");
+const { getStatHtml } = require('../statHtml');
+const { getLast30Days, msToHours } = require('../helper');
 
 const fs = require('fs');
-const vscode = require('vscode');
 const path = require('path');
-const { firebaseConfig } = require("./firebaseHandler")
+const vscode = require("vscode")
+const { fdb, db } = require("./firebaseConfig")
 
-const { parse } = require("csv-parse");
-const { getStatHtml } = require("./statHtml")
-const { onAuth } = require("./src/extHelper")
-const { calculateTotalDays, getLast30Days, msToHours } = require("./helper")
-const { fdb, db } = require("./src/firebaseConfig")
-
-
-/**
- * @param {vscode.ExtensionContext} context
- */
-
-
-
-let startTime = 0;
-let sessionTime = 0;
-let devlogs;
-
-
-
-
-function getPath(fileName, context) {
-    return vscode.Uri.joinPath(context.extensionUri, fileName)["path"].substring(1)
-}
-
-
-
-async function getStats(context) {
+async function getStats(context, extentionPath, sessionTime) {
 
     let word_count = 0;
     let line_count = 0;
@@ -52,9 +28,9 @@ async function getStats(context) {
 
     let fileHash = new Map()
     let cmdCnt = 0;
-    const csvPath = getPath("log.csv", context)
+    const csvPath = extentionPath + "log.csv";
 
-    let userid = fs.readFileSync(getPath("user.txt", context), 'utf8');
+    let userid = fs.readFileSync(csvPath, 'utf8');
     let streak = 0;
     let logs = [];
     let dates = [];
@@ -265,27 +241,4 @@ async function getStats(context) {
 
 }
 
-
-function activate(context) {
-    devlogs = new Devlogs(context)
-
-    context.subscriptions.push(vscode.commands.registerCommand('devlog.start', function () {
-        devlogs.startCommand()
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('devlog.stop', function () {
-        devlogs.stopCommand()
-    }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('devlog.authenticate', function () {
-        devlogs.authCommand()
-    }));
-}
-
-// This method is called when your extension is deactivated
-function deactivate() { }
-
-module.exports = {
-    activate,
-    deactivate
-}
+module.exports = { getStats }
