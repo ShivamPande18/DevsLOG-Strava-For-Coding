@@ -1,6 +1,7 @@
 const path = require('path');
 const vscode = require('vscode');
 const child = require("child_process");
+const { getStats } = require("./getStats")
 const { getStartHtml } = require('../web/startHtml');
 const { display, checkUser, onAuth, setStreaks } = require("./extHelper")
 
@@ -75,7 +76,7 @@ class Devlogs {
 
     stopCommand() {
         console.log("Session Stops");
-        vscode.window.showInformationMessage('Session Ends');
+        display('Session Ends');
         if (this.statusBarUpdateInterval) {
             clearInterval(this.statusBarUpdateInterval);
             this.statusBarUpdateInterval = null;
@@ -84,7 +85,7 @@ class Devlogs {
         this.startTime = 0;
 
         if (this.process) this.process.kill();
-        // getStats(context);
+        getStats(this.context, this.FILE_LOG, this.sessionTime);
     }
 
     authCommand() {

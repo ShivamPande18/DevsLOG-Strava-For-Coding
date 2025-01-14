@@ -7,7 +7,7 @@ const path = require('path');
 const vscode = require("vscode")
 const { fdb, db } = require("./firebaseConfig")
 
-async function getStats(context, extentionPath, sessionTime) {
+async function getStats(context, FILE_LOG, sessionTime) {
 
     let word_count = 0;
     let line_count = 0;
@@ -28,9 +28,8 @@ async function getStats(context, extentionPath, sessionTime) {
 
     let fileHash = new Map()
     let cmdCnt = 0;
-    const csvPath = extentionPath + "log.csv";
 
-    let userid = fs.readFileSync(csvPath, 'utf8');
+    let userid = fs.readFileSync(FILE_LOG, 'utf8');
     let streak = 0;
     let logs = [];
     let dates = [];
@@ -65,7 +64,7 @@ async function getStats(context, extentionPath, sessionTime) {
 
 
     let prodScore = 0;
-    fs.createReadStream(csvPath)
+    fs.createReadStream(FILE_LOG)
         .pipe(parse({ delimiter: ",", from_line: 2 }))
         .on("data", function (row) {
             prodScore++;

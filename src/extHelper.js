@@ -1,14 +1,12 @@
-const { calculateTotalDays } = require('../helper');
-
 const fs = require('fs');
 const vscode = require('vscode');
 const { fdb, db } = require("./firebaseConfig")
 const { getAuthHtml } = require('../authHtml');
+const { calculateTotalDays } = require('../helper');
 
 function display(msg) {
     vscode.window.showInformationMessage(msg)
 }
-
 
 async function onAuth(panel, cssFileUri, path) {
     try {
