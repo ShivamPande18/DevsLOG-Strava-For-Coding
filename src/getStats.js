@@ -5,9 +5,8 @@ const { getLast30Days, msToHours } = require('./helper');
 const fs = require('fs');
 const path = require('path');
 const vscode = require("vscode")
-const { fdb, db } = require("./firebaseConfig")
 
-async function getStats(context, FILE_LOG, sessionTime) {
+async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
 
     let word_count = 0;
     let line_count = 0;
@@ -20,21 +19,22 @@ async function getStats(context, FILE_LOG, sessionTime) {
     let tab_count = 0;
     let paranthesis_count = 0;
     let semicolon_count = 0;
-    let file_counts = 0;
     let langHash = new Map()
+    let projHash = new Map()
     let langs = ["", "", "", "", "", ""];
+    let projects = ["", "", "", "", "", ""];
 
 
 
-    let fileHash = new Map()
     let cmdCnt = 0;
 
-    let userid = fs.readFileSync(FILE_LOG, 'utf8');
+    let userid = fs.readFileSync(FILE_USER, 'utf8');
     let streak = 0;
     let logs = [];
     let dates = [];
     let sTimes = [];
     let langsDb = [];
+    let projsDb = [];
     let curDate = new Date().toLocaleDateString("en-US");
     const userRef = fdb.collection(db, 'users');
     const q = fdb.query(userRef, fdb.where('userId', '==', userid));
@@ -46,6 +46,7 @@ async function getStats(context, FILE_LOG, sessionTime) {
             streak = doc.data().streak;
             logs = doc.data().logs;
             langsDb = doc.data().langs;
+            projsDb = doc.data().projects;
             // curDate = doc.data().lastSeen.toString();
         });
     } catch (error) {
@@ -69,6 +70,19 @@ async function getStats(context, FILE_LOG, sessionTime) {
         .on("data", function (row) {
             prodScore++;
             cmdCnt++;
+
+            let projStruct = row[2].split(" - ")
+
+            if (projStruct.length >= 2) {
+                if (!projHash.has(projStruct[projStruct.length - 2])) {
+                    projHash.set(projStruct[projStruct.length - 2], 1)
+                }
+                else {
+                    projHash.set(projStruct[projStruct.length - 2], projHash.get(projStruct[projStruct.length - 2]) + 1)
+                }
+            }
+
+
             if (!langHash.has(row[3])) {
                 langHash.set(row[3], 1)
 
@@ -124,10 +138,6 @@ async function getStats(context, FILE_LOG, sessionTime) {
             word_count = space_count + enter_count;
             line_count = enter_count;
 
-            if (!fileHash.has(row[2])) {
-                file_counts++;
-                fileHash.set(row[2], 1)
-            }
 
         })
         .on("error", function (error) {
@@ -145,15 +155,32 @@ async function getStats(context, FILE_LOG, sessionTime) {
                 langHash.set(key, (val / cmdCnt) * 100)
             })
 
+            console.log("-------------------------------------------------")
+            console.log(projHash)
+
+            projHash.forEach((val, key) => {
+                projHash.set(key, (val / cmdCnt) * 100)
+            })
+
+
+
+
+
             let i = 0;
             let sortedLangHash = Array.from(langHash).sort((a, b) => b[1] - a[1]);
+            let sortedProjHash = Array.from(projHash).sort((a, b) => b[1] - a[1]);
 
             console.log("Ans = " + sortedLangHash)
             for (let i = 0; i < Math.min(6, sortedLangHash.length); i++) {
                 langs[i] = sortedLangHash[i][0] + "-" + parseFloat(sortedLangHash[i][1]).toFixed(2) + "%"
             }
 
+            for (let i = 0; i < Math.min(6, sortedProjHash.length); i++) {
+                projects[i] = sortedProjHash[i][0] + "-" + parseFloat(sortedProjHash[i][1]).toFixed(2) + "%"
+            }
+
             let langsTemp = new Array(6).fill(" ");
+            let projsTemp = new Array(6).fill(" ");
 
             if (langs.filter(lang => lang !== "").length > 3) {
                 let remainingSum = 0;
@@ -167,6 +194,20 @@ async function getStats(context, FILE_LOG, sessionTime) {
                 langsTemp[0] = first;
                 langsTemp[1] = second;
                 langsTemp[2] = "Others " + remainingSum.toFixed(2) + "%";
+            }
+
+            if (projects.filter(project => project !== "").length > 3) {
+                let remainingSum = 0;
+                for (let i = 2; i < projects.length; i++) {
+                    if (projects[i] !== "") {
+                        remainingSum += parseFloat(projects[i].split(" ")[1]);
+                    }
+                }
+                const first = projects[0];
+                const second = projects[1];
+                projsTemp[0] = first;
+                projsTemp[1] = second;
+                projsTemp[2] = "Others " + remainingSum.toFixed(2) + "%";
             }
 
             for (let i = 0; i < langs.length; i++) {
@@ -203,18 +244,57 @@ async function getStats(context, FILE_LOG, sessionTime) {
                 }
             }
 
+
+            for (let i = 0; i < projects.length; i++) {
+                if (projects[i] && projects[i] !== "") {
+                    const projParts = projects[i].split("-");
+                    const proj = projParts[0];
+                    const percentage = parseFloat(projParts[1]);
+                    const sTimes = (percentage / 100) * sessionTime;
+
+                    // Find if project already exists in projDb
+                    let found = false;
+                    for (let j = 0; j < projsDb.length; j++) {
+                        const dbParts = projsDb[j].split("-");
+                        if (dbParts[0] === proj) {
+                            // Add hours to existing entry
+                            const newTime = parseFloat(dbParts[1]) + sTimes;
+                            projsDb[j] = `${proj}-${newTime}`;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        // Add new project entry
+                        projsDb.push(`${proj}-${sTimes}`);
+                    }
+
+                    // Sort projDb by hours in descending order
+                    projsDb.sort((a, b) => {
+                        const hoursA = parseFloat(a.split("-")[1]);
+                        const hoursB = parseFloat(b.split("-")[1]);
+                        return hoursB - hoursA;
+                    });
+                }
+            }
+
             try {
+                console.log("heere")
+                console.log(projsDb)
+
                 const docRef = fdb.doc(db, 'users', userid);
                 fdb.updateDoc(docRef, {
                     logs: combinedLogs,
                     langs: langsDb,
                     productivity: prodScore,
+                    projects: projsDb,
                 });
             } catch (error) {
-                console.error("Error updating logs:", error);
+                console.log("Error updating logs:", error);
             }
 
-            // langHash.forEach((val, key) => {
+            // langHash.forEach((val, key) => { 
             //     console.log(key + " " + val + "%")
             //     langs[i] = key + " " + val.toFixed(2) + "%"
             //     i++;

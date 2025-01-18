@@ -3,7 +3,9 @@ const vscode = require('vscode');
 const child = require("child_process");
 const { getStats } = require("./getStats")
 const { getStartHtml } = require('../web/startHtml');
-const { display, checkUser, onAuth, setStreaks } = require("./extHelper")
+const { display, checkUser, onAuth, setStreaks, getUser } = require("./extHelper")
+const fb = require("firebase/app");
+const fdb = require("firebase/firestore")
 
 class Devlogs {
 
@@ -23,12 +25,32 @@ class Devlogs {
     FILE_PROCESS = ""
     FILE_LOG = ""
 
+    userToken = ""
+    firebaseConfig = {};
+    app = null;
+    db = null;
+
 
     constructor(context) {
         console.log('Congratulations, your extension "devlog" is now active!');
         this.context = context
         this.startTime = Date.now()
         this.extentionPath = this.context.extensionUri.path.toString().substring(1) + "/"
+
+
+        require('dotenv').config({ path: this.extentionPath + "/.env" });
+
+        this.firebaseConfig = {
+            apiKey: process.env.FIREBASE_API_KEY,
+            authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+            messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+            appId: process.env.FIREBASE_APP_ID,
+            measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+        }
+        this.app = fb.initializeApp(this.firebaseConfig);
+        this.db = fdb.getFirestore(this.app);
 
         this.FILE_USER = this.context.extensionUri.path.toString().substring(1) + "/files/user.txt";
         this.FILE_PROCESS = this.context.extensionUri.path.toString().substring(1) + "/files/cp.py";
@@ -39,7 +61,6 @@ class Devlogs {
         // this.statusBar.command = "devlog.helloWorld";
         this.statusBar.show();
 
-        console.log(this.extentionPath + "files/cp.py")
 
         this.panel = vscode.window.createWebviewPanel(
             'devlogs',
@@ -50,8 +71,13 @@ class Devlogs {
             }
         );
 
-        // this.panel.webview.html = getStartHtml()
+        this.panel.dispose()
 
+        getUser(this.FILE_USER).then(token => {
+            this.userToken = token;
+        });
+
+        if (this.userToken != "") this.panel.webview.html = getStartHtml()
     }
 
     updateStatusBarWithElapsedTime = () => {
@@ -85,7 +111,7 @@ class Devlogs {
         this.startTime = 0;
 
         if (this.process) this.process.kill();
-        getStats(this.context, this.FILE_LOG, this.sessionTime);
+        getStats(this.context, this.FILE_USER, this.FILE_LOG, this.sessionTime, this.db, fdb);
     }
 
     authCommand() {

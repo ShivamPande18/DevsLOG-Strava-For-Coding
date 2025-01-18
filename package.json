@@ -5,6 +5,7 @@
   "description": "Track, analyze, and share your coding sessions with the most productive coding community",
   "version": "0.0.4",
   "publisher": "ShivamPande18",
+  "envFile": "${workspaceFolder}/.env",
   "engines": {
     "vscode": "^1.94.0"
   },
@@ -38,8 +39,8 @@
         "title": "Authenticate User"
       },
       {
-        "command": "devlog.openWebview",
-        "title": "Open Devlogs Webview"
+        "command": "devlog.dashboard",
+        "title": "Open Dashboard"
       }
     ],
     "viewsContainers": {
@@ -76,6 +77,7 @@
   },
   "dependencies": {
     "csv-parse": "^5.5.6",
+    "dotenv": "^16.4.7",
     "firebase": "^11.0.0"
   },
   "repository": {

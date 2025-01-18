@@ -8,11 +8,19 @@ function display(msg) {
     vscode.window.showInformationMessage(msg)
 }
 
+async function getUser(path) {
+    try {
+        return await fs.promises.readFile(path, 'utf8')
+    } catch (err) {
+        return ""
+    }
+}
+
 async function onAuth(panel, cssFileUri, path) {
     try {
-        const data = await fs.promises.readFile(path, 'utf8')
+        const data = await getUser(path)
         if (data == "") {
-            vscode.env.openExternal(vscode.Uri.parse("https://devlogs-dev.netlify.app/register"));
+            vscode.env.openExternal(vscode.Uri.parse("https://devlogs-dev.netlify.app/"));
             panel.webview.html = getAuthHtml(cssFileUri);
         }
         else {
@@ -47,9 +55,11 @@ async function setStreaks(path) {
         const data = await fs.promises.readFile(path, 'utf8');
         const uid = data.toString().trim();
         const docRef = fdb.doc(db, "users", uid);
-        console.log("uid " + uid)
+        console.log("huaa")
+        console.log(docRef.path)
         const docSnap = await fdb.getDoc(docRef);
-        console.log("uid ")
+        console.log("heerrww")
+        console.log(docSnap)
 
 
 
@@ -93,8 +103,8 @@ async function setStreaks(path) {
     }
     catch (err) {
         display(err);
-        console.log(err);
+        console.log("ye hai kya " + err);
     }
 }
 
-module.exports = { onAuth, checkUser, display, setStreaks }
+module.exports = { onAuth, checkUser, display, setStreaks, getUser }
