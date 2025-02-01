@@ -56,8 +56,6 @@ function getStartHtml() {
 <body>
 
     <div class="panel">
-        <span class="time">00:00:00</span>
-        <span class="desc">coded today</span>
         <button id = "myBtn" class="startBtn">Start Session</button>
     </div>
     <script>

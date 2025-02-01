@@ -1,3 +1,5 @@
+const { getNewStatHtml } = require("../files/newStatHtml");
+
 const { parse } = require("csv-parse");
 const { getStatHtml } = require('../files/statHtml');
 const { getLast30Days, msToHours } = require('./helper');
@@ -52,7 +54,8 @@ async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
     } catch (error) {
         console.error("Error getting streak:", error);
     }
-
+    console.log("undnahi")
+    console.log(langsDb)
 
     logs.forEach(log => {
         const [date, sTime] = log.split('-');
@@ -72,7 +75,6 @@ async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
             cmdCnt++;
 
             let projStruct = row[2].split(" - ")
-
             if (projStruct.length >= 2) {
                 if (!projHash.has(projStruct[projStruct.length - 2])) {
                     projHash.set(projStruct[projStruct.length - 2], 1)
@@ -155,8 +157,6 @@ async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
                 langHash.set(key, (val / cmdCnt) * 100)
             })
 
-            console.log("-------------------------------------------------")
-            console.log(projHash)
 
             projHash.forEach((val, key) => {
                 projHash.set(key, (val / cmdCnt) * 100)
@@ -167,12 +167,17 @@ async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
 
 
             let i = 0;
-            let sortedLangHash = Array.from(langHash).sort((a, b) => b[1] - a[1]);
-            let sortedProjHash = Array.from(projHash).sort((a, b) => b[1] - a[1]);
+            let sortedLangHash = [];
+            let sortedProjHash = [];
+            sortedLangHash = Array.from(langHash).sort((a, b) => b[1] - a[1]);
+            sortedProjHash = Array.from(projHash).sort((a, b) => b[1] - a[1]);
 
-            console.log("Ans = " + sortedLangHash)
+
+            let newLang = []
+
             for (let i = 0; i < Math.min(6, sortedLangHash.length); i++) {
                 langs[i] = sortedLangHash[i][0] + "-" + parseFloat(sortedLangHash[i][1]).toFixed(2) + "%"
+                newLang[i] = sortedLangHash[i][0] + "-" + parseFloat(sortedLangHash[i][1]).toFixed(2)
             }
 
             for (let i = 0; i < Math.min(6, sortedProjHash.length); i++) {
@@ -186,7 +191,7 @@ async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
                 let remainingSum = 0;
                 for (let i = 2; i < langs.length; i++) {
                     if (langs[i] !== "") {
-                        remainingSum += parseFloat(langs[i].split(" ")[1]);
+                        remainingSum += parseFloat(langs[i].split("-")[1]);
                     }
                 }
                 const first = langs[0];
@@ -195,6 +200,7 @@ async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
                 langsTemp[1] = second;
                 langsTemp[2] = "Others " + remainingSum.toFixed(2) + "%";
             }
+
 
             if (projects.filter(project => project !== "").length > 3) {
                 let remainingSum = 0;
@@ -209,6 +215,9 @@ async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
                 projsTemp[1] = second;
                 projsTemp[2] = "Others " + remainingSum.toFixed(2) + "%";
             }
+
+
+
 
             for (let i = 0; i < langs.length; i++) {
                 if (langs[i] && langs[i] !== "") {
@@ -245,13 +254,15 @@ async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
             }
 
 
+
+
             for (let i = 0; i < projects.length; i++) {
                 if (projects[i] && projects[i] !== "") {
                     const projParts = projects[i].split("-");
                     const proj = projParts[0];
                     const percentage = parseFloat(projParts[1]);
                     const sTimes = (percentage / 100) * sessionTime;
-
+                    console.log("idharrrrrrrrrrrrr1")
                     // Find if project already exists in projDb
                     let found = false;
                     for (let j = 0; j < projsDb.length; j++) {
@@ -264,6 +275,7 @@ async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
                             break;
                         }
                     }
+                    console.log("idharrrrrrrrrrrrr2")
 
                     if (!found) {
                         // Add new project entry
@@ -278,6 +290,8 @@ async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
                     });
                 }
             }
+
+
 
             try {
                 console.log("heere")
@@ -301,9 +315,9 @@ async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
             // })
 
             const panel = vscode.window.createWebviewPanel(
-                'sessionSummary', // Identifies the type of the webview. Used internally
-                'Session Summary', // Title of the panel displayed to the user
-                vscode.ViewColumn.One, // Editor column to show the new webview panel in.
+                'sessionReport', // Identifies the type of the webview. Used internally
+                'Session Report', // Title of the panel displayed to the user
+                vscode.ViewColumn.Two, // Editor column to show the new webview panel in.
                 {
                     enableScripts: true
                 } // Webview options. More on these later.
@@ -314,8 +328,8 @@ async function getStats(context, FILE_USER, FILE_LOG, sessionTime, db, fdb) {
             );
             const cssFileUri = panel.webview.asWebviewUri(cssFilePath);
 
-
-            panel.webview.html = getStatHtml(cssFileUri, streak, word_count, line_count, msToHours(sessionTime), result, langsTemp);
+            // panel.webview.html = getStatHtml(cssFileUri, streak, word_count, line_count, msToHours(sessionTime), result, langsDb);
+            panel.webview.html = getNewStatHtml(line_count, msToHours(sessionTime), streak, newLang, prodScore);
         });
 
 }

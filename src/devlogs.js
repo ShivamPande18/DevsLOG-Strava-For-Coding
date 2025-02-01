@@ -1,3 +1,5 @@
+const { getAuthHtml } = require('../web/authHtml');
+
 const path = require('path');
 const vscode = require('vscode');
 const child = require("child_process");
@@ -71,13 +73,39 @@ class Devlogs {
             }
         );
 
-        this.panel.dispose()
+
+        // this.panel.dispose()
 
         getUser(this.FILE_USER).then(token => {
             this.userToken = token;
+            // if (this.userToken != "") {
+            //     this.panel.webview.html = getStartHtml()
+            // }
+            // else {
+            //     const cssFilePath = vscode.Uri.file(
+            //         path.join(context.extensionPath, 'web', 'auth.css')
+            //     );
+            //     const cssFileUri = this.panel.webview.asWebviewUri(cssFilePath);
+            //     this.panel.webview.html = getAuthHtml(cssFileUri)
+            // }
         });
 
-        if (this.userToken != "") this.panel.webview.html = getStartHtml()
+        this.panel.webview.onDidReceiveMessage(
+            message => {
+                if (message.command == "start") {
+                    this.startCommand()
+                }
+                else if (message.command == "onAuth") {
+                    let curToken = (message.text)
+                    checkUser(this.panel, this.FILE_USER, curToken, this.db, fdb)
+                }
+            },
+            undefined,
+            this.context.subscriptions
+        );
+
+
+
     }
 
     updateStatusBarWithElapsedTime = () => {
@@ -96,7 +124,7 @@ class Devlogs {
         this.startTime = Date.now();
         if (this.statusBarUpdateInterval) clearInterval(this.statusBarUpdateInterval);
         this.statusBarUpdateInterval = setInterval(this.updateStatusBarWithElapsedTime, 1000);
-        setStreaks(this.FILE_USER);
+        setStreaks(this.FILE_USER, this.db, fdb);
         this.process = child.spawn('python', [this.FILE_PROCESS, this.FILE_LOG])
     }
 
@@ -124,18 +152,6 @@ class Devlogs {
 
         onAuth(this.panel, cssFileUri, this.FILE_USER)
         console.log("Auth cmd")
-
-        this.panel.webview.onDidReceiveMessage(
-            message => {
-                if (message.command == "onAuth") {
-
-                    let curToken = (message.text)
-                    checkUser(this.panel, this.FILE_USER, curToken)
-                }
-            },
-            undefined,
-            this.context.subscriptions
-        );
     }
 
 }

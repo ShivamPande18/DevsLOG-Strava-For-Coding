@@ -1,4 +1,4 @@
-function getAuthHtml(cssFileUri) {
+function getAuthHtml(cssFileUri,) {
     return `
 <!DOCTYPE html>
 <html lang="en">
@@ -22,9 +22,10 @@ function getAuthHtml(cssFileUri) {
     </div>
 
     <script>
-        document.getElementById("myBtn").addEventListener("click", function(){
-        const token = document.getElementById('tokenInput').value;
         const vscode = acquireVsCodeApi();
+        document.getElementById("myBtn").addEventListener("click", function(){
+        console.log("pandeis emmememememem")
+        const token = document.getElementById('tokenInput').value;
         vscode.postMessage({
                 command: 'onAuth',
                 text: token,

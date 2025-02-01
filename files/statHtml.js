@@ -56,19 +56,6 @@ function getStatHtml(cssFileUri, streak, wc, lc, st, dates, langs) {
                             <h2>parts</h2>
                         </div>
 
-
-                        <div>
-                            <h1>${langs[0].split(" ")[1]}</h1>
-                            <h2>${langs[0].split(" ")[0]}</h2>
-                        </div>
-                        <div>
-                            <h1>${langs[1].split(" ")[1]}</h1>
-                            <h2>${langs[1].split(" ")[0]}</h2>
-                        </div>
-                        <div>
-                            <h1>${langs[3].split(" ")[1]}</h1>
-                            <h2>${langs[3].split(" ")[0]}</h2>
-                        </div>
                     </div>
                 </div>
             </div>

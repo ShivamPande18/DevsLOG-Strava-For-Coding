@@ -2,7 +2,6 @@ const vscode = require('vscode');
 const { Devlogs } = require('./src/devlogs');
 const path = require("path")
 // const { db } = require("./src/firebaseConfig")
-const { setExtensionPath } = require("./src/global")
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -10,7 +9,6 @@ const { setExtensionPath } = require("./src/global")
 
 
 async function activate(context) {
-    setExtensionPath(context.extensionUri.path.toString().substring(1))
     let devlogs = new Devlogs(context)
 
     console.log("Firestore initialized: ", devlogs.db);

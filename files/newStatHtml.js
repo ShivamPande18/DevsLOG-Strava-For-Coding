@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+function getNewStatHtml(line_count, hours, streak, langs, productivity) {
+    return `
+    <!DOCTYPE html>
 <html>
 
 <head>
@@ -205,27 +207,18 @@
 
             <div class="primary-stats">
                 <div class="stat-item">
-                    <div class="stat-value">342</div>
+                    <div class="stat-value">${line_count}</div>
                     <div class="stat-label">Lines</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">2:45</div>
-                    <div class="stat-label">Time</div>
+                    <div class="stat-value">${hours}</div>
+                    <div class="stat-label">hours</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">82%</div>
-                    <div class="stat-label">Productivity</div>
+                    <div class="stat-value">${productivity}%</div>
+                    <div class="stat-label">{Productivity}</div>
                 </div>
             </div>
-
-            <!-- <div class="achievement">
-                <div class="medal">3</div>
-                <div>
-                    <div style="font-size: 16px; font-weight: 500;">This was your 3rd fastest coding session!</div>
-                    <div style="color: var(--text-secondary); font-size: 14px; margin-top: 4px;">New Personal Record
-                    </div>
-                </div>
-            </div> -->
         </div>
 
         <div class="metrics-grid">
@@ -235,7 +228,7 @@
                     <div style="font-weight: 500;">Coding Streak</div>
                     <div
                         style="color: rgb(255, 166, 0); font-size: 4rem; text-align: center; margin-top: 20px; font-weight: bold;">
-                        2 days</div>
+                        ${streak} days</div>
                 </div>
             </div>
 
@@ -244,25 +237,25 @@
                     <div style="font-weight: 500;">Language Distribution</div>
                 </div>
                 <div class="language-item">
-                    <span>TypeScript</span>
-                    <span>65%</span>
+                    <span>${langs[0] ? langs[0].split("-")[0] : ""}</span>
+                    <span>${langs[0] ? langs[0].split("-")[1] : ""}%</span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 65%"></div>
+                    <div class="progress-fill" style="width: ${langs[0] ? langs[0].split("-")[1] : 0}%"></div>
                 </div>
                 <div class="language-item">
-                    <span>JavaScript</span>
-                    <span>20%</span>
+                    <span>${langs[1] ? langs[1].split("-")[0] : "-"}</span>
+                    <span>${langs[1] ? langs[1].split("-")[1] : "-"}%</span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 20%"></div>
+                    <div class="progress-fill" style="width: ${langs[1] ? langs[1].split("-")[1] : 0}%"></div>
                 </div>
                 <div class="language-item">
-                    <span>HTML/CSS</span>
-                    <span>15%</span>
+                    <span>${langs[2] ? langs[2].split("-")[0] : "-"}</span>
+                    <span>${langs[2] ? langs[2].split("-")[1] : "-"}%</span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 15%"></div>
+                    <div class="progress-fill" style="width: ${langs[2] ? langs[2].split("-")[1] : 0}%"></div>
                 </div>
             </div>
 
@@ -272,3 +265,7 @@
 </body>
 
 </html>
+    `
+}
+
+module.exports = { getNewStatHtml }

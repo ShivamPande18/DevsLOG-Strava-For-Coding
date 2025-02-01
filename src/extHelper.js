@@ -1,6 +1,6 @@
 const fs = require('fs');
 const vscode = require('vscode');
-const { fdb, db } = require("./firebaseConfig")
+// const { fdb, db } = require("./firebaseConfig")
 const { getAuthHtml } = require('../web/authHtml');
 const { calculateTotalDays } = require('./helper');
 
@@ -34,7 +34,7 @@ async function onAuth(panel, cssFileUri, path) {
     }
 }
 
-async function checkUser(panel, path, token) {
+async function checkUser(panel, path, token, db, fdb) {
     const q = fdb.query(fdb.collection(db, "users"), fdb.where("userId", "==", token), fdb.limit(1));
     const querySnapshot = await fdb.getDocs(q);
     if (!querySnapshot.empty) {
@@ -50,7 +50,7 @@ async function checkUser(panel, path, token) {
     }
 }
 
-async function setStreaks(path) {
+async function setStreaks(path, db, fdb) {
     try {
         const data = await fs.promises.readFile(path, 'utf8');
         const uid = data.toString().trim();
